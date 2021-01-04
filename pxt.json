@@ -2,8 +2,7 @@
     "name": "Poker solitaire",
     "description": "",
     "dependencies": {
-        "device": "*",
-        "kenny_cards": "file:./kenny_cards.json"
+        "device": "*"
     },
     "files": [
         "main.ts",
