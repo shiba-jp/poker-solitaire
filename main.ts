@@ -265,7 +265,8 @@ function finishGame() {
     effects.confetti.startScreenEffect()
     pause(2000)
     game.showLongText(
-        //"Score: " + info.score() + "P" + 
+        "Score: " + info.score() + "P" + 
+        "\n     " + 
         //"\nHi: " + info.highScore() + "P" +
         "\n1Pair:2Px" + counter_1pair +
         "\n2Pair:5Px" + counter_2pair +
