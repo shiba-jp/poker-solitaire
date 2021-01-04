@@ -20,7 +20,6 @@ function initFields () {
     rows[3] = 72
     rows[4] = 88
 }
-
 function initCursor () {
     cursor = sprites.create(img`
         2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
@@ -96,6 +95,25 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     }
     moveSprite(cursor, posX, posY)
 })
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if(status == 1 && currentHandsList != null) {
+        let hands: string = ""
+
+        if(currentHandsList.length == 0) {
+            hands = "No hand."
+        }else{
+            for(let i = 0; i < currentHandsList.length; i++) {
+                if(i == currentHandsList.length -1) {
+                    hands = hands + currentHandsList[i]
+                }else{
+                    hands = hands + currentHandsList[i] + "\n"
+                }
+            }
+        }
+
+        game.showLongText(hands, DialogLayout.Center)
+    }
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     //After drawing card status.
     if(status == 1) {
@@ -123,6 +141,8 @@ function initHandCounter() {
 function calcScore() {
     console.log("calcScore start.")
     initHandCounter()
+    currentHandsList = []
+    let existSimpleHand: boolean = false
     
     for(let way = 0; way < 12; way++){
         let h:number[] = []
@@ -143,26 +163,37 @@ function calcScore() {
 
         if(k == 1){
             counter_1pair++
+            currentHandsList.push(wayName[way] + "1pair")
             console.logValue("1pair way", way)
+            existSimpleHand = true
         }
         if(k == 2){
             counter_2pair++
+            currentHandsList.push(wayName[way] + "2pair")
             console.logValue("2pair way", way)
+            existSimpleHand = true
         }
         if(k == 3){
             counter_3card++
+            currentHandsList.push(wayName[way] + "3card")
             console.logValue("3card way", way)
+            existSimpleHand = true
         }
         if(k == 4){
             counter_fullHouse++
+            currentHandsList.push(wayName[way] + "FullHouse")
             console.logValue("fullhouse way", way)
+            existSimpleHand = true
         }
         if(k == 6){
             counter_4card++
+            currentHandsList.push(wayName[way] + "4card")
             console.logValue("4card way", way)
+            existSimpleHand = true
         }
 
-        if(h.indexOf(null) > -1) {
+        //カードが5枚以下、もしくは上の役がすでにある場合は処理をスキップ
+        if(h.indexOf(null) > -1 || existSimpleHand) {
             continue;    
         }
 
@@ -196,14 +227,17 @@ function calcScore() {
 
         if(sf == 1) {
             counter_straight++
+            currentHandsList.push(wayName[way] + "Straight")
             console.logValue("Straight way", way)
         }
         if(sf == 2) {
             counter_flush++
+            currentHandsList.push(wayName[way] + "Flush")
             console.logValue("Flush way", way)
         }
         if(sf == 3) {
             counter_sf++
+            currentHandsList.push(wayName[way] + "S.F")
             console.logValue("S.F way", way)
         }
     }
@@ -268,13 +302,13 @@ function finishGame() {
         "Score: " + info.score() + "P" + 
         "\n     " + 
         //"\nHi: " + info.highScore() + "P" +
-        "\n1Pair:2Px" + counter_1pair +
-        "\n2Pair:5Px" + counter_2pair +
-        "\n3Card:10Px" + counter_3card +
+        "\n1pair:2Px" + counter_1pair +
+        "\n2pair:5Px" + counter_2pair +
+        "\n3card:10Px" + counter_3card +
         "\nStraight:15Px" + counter_straight +
         "\nFlush:20Px" + counter_flush +
         "\nFullHouse:25Px" + counter_fullHouse +
-        "\n4Card:50Px" + counter_4card +
+        "\n4card:50Px" + counter_4card +
         "\nS.F:75Px" + counter_sf
         , DialogLayout.Center)
     
@@ -341,7 +375,6 @@ function moveSprite (sprite: Sprite, posX: number, posY: number) {
             putPosX.push(posX)
             putPosY.push(posY)
             putCardMap[posX][posY] = currentCardNo
-            //console.logValue("put card:posX:" + posX + " posY:" + posY + " No:", putCardMap[posX][posY])
             
             /** 
             for(let i = 0; i < 5; i++){
@@ -1850,6 +1883,20 @@ function initCardMap() {
     mx[11][4]= 4
     my[11][4]= 4
 }
+function initWayName() {
+    wayName[0] = "R1:"
+    wayName[1] = "R2:"
+    wayName[2] = "R3:"
+    wayName[3] = "R4:"
+    wayName[4] = "R5:"
+    wayName[5] = "C1:"
+    wayName[6] = "C2:"
+    wayName[7] = "C3:"
+    wayName[8] = "C4:"
+    wayName[9] = "C5:"
+    wayName[10] = "/:"
+    wayName[11] = "\\:"
+}
 function initVariables () {
     putPosX = []
     putPosY = []
@@ -1986,6 +2033,8 @@ let counter_fullHouse: number = 0
 let counter_flush: number = 0
 let counter_straight: number = 0
 let counter_sf: number = 0
+let wayName: string[] = []
+let currentHandsList: string[] = null
 scene.setBackgroundImage(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
@@ -2283,8 +2332,9 @@ initCardMap()
 initCardImage()
 initNumImage()
 initHandImage()
+initWayName()
 initCursor()
 initGirl()
-game.showLongText("Move the cursor \\nand press A to place the card.", DialogLayout.Bottom)
+game.showLongText("Move the cursor. \nA: put a card.\nB: show hand info.", DialogLayout.Bottom)
 status = 2 //before drawing card status.
 drawCard()
