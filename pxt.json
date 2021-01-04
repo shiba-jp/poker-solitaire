@@ -3,7 +3,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "kenny_cards": "pkg:kenny_cards.json"
+        "kenny_cards": "file:./kenny_cards.json"
     },
     "files": [
         "main.ts",
