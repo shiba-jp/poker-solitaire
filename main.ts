@@ -194,10 +194,11 @@ function calcScore() {
 
         //カードが5枚以下、もしくは上の役がすでにある場合は処理をスキップ
         if(h.indexOf(null) > -1 || existSimpleHand) {
+            existSimpleHand = false
             continue;    
         }
 
-        for(let i = 4; i > 0; i--) {
+        for(let i = 4; i >= 0; i--) {
             for(let j = 0; j < i; j++) {
                 if(h[j] > h[j+1]) {
                     h = swap(h, j, (j + 1))
@@ -205,8 +206,14 @@ function calcScore() {
             }
         }
 
+        let q = h[4]
+            let w = h[0]
+            let e = getRank(h[4])
+            let r = getRank(h[40])
+
         let sf: number = 0
         if((getRank(h[4]) - getRank(h[0])) == 4) {
+            
             sf = 1
         }
 
