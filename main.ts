@@ -206,11 +206,6 @@ function calcScore() {
             }
         }
 
-        let q = h[4]
-            let w = h[0]
-            let e = getRank(h[4])
-            let r = getRank(h[40])
-
         let sf: number = 0
         if((getRank(h[4]) - getRank(h[0])) == 4) {
             
