@@ -530,20 +530,28 @@ function initNumImage() {
     straight_num_fp = sprites.create(img_n0, SpriteKind.score)
     sf_num_tp = sprites.create(img_n0, SpriteKind.score)
     sf_num_fp = sprites.create(img_n0, SpriteKind.score)
+
     onePair_num_tp.setPosition(120, 24)
     onePair_num_fp.setPosition(126, 24)
+
     twoPair_num_tp.setPosition(120, 40)
     twoPair_num_fp.setPosition(126, 40)
+
     threeCard_num_tp.setPosition(120, 56)
     threeCard_num_fp.setPosition(126, 56)
-    fourCard_num_tp.setPosition(120, 72)
-    fourCard_num_fp.setPosition(126, 72)
-    fullHouse_num_tp.setPosition(151, 24)
-    fullHouse_num_fp.setPosition(157, 24)
-    flush_num_tp.setPosition(151, 40)
-    flush_num_fp.setPosition(157, 40)
-    straight_num_tp.setPosition(151, 56)
-    straight_num_fp.setPosition(157, 56)
+
+    straight_num_tp.setPosition(120, 72)
+    straight_num_fp.setPosition(126, 72)
+
+    flush_num_tp.setPosition(151, 24)
+    flush_num_fp.setPosition(157, 24)
+
+    fullHouse_num_tp.setPosition(151, 40)
+    fullHouse_num_fp.setPosition(157, 40)
+
+    fourCard_num_tp.setPosition(151, 56)
+    fourCard_num_fp.setPosition(157, 56)
+
     sf_num_tp.setPosition(151, 72)
     sf_num_fp.setPosition(157, 72)
 }
@@ -1539,148 +1547,148 @@ function initCardImage () {
 }
 function initHandImage() {
     img_hand_1pair = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . . f . . . . . . . f 
-    . . . . . . f f f . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . . . . f 
-    f . . f . f f . . . . . f f . . 
-    f f f . f . f . . f . f . . . . 
-    f . . . f . f . . f . f . . . . 
-    f . . . . f f f . f . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . a a a a . . . . . .
+        . . . . a a a a a a a a . . . .
+        . . . a a a b b b b a a a . . .
+        . . a a b b b b b b b b a a . .
+        . . a a b b 1 b b 1 1 b a a . .
+        . a a b b 1 1 b b 1 b 1 b a a .
+        . a a b b b 1 b b 1 b 1 b a a .
+        . a a b b b 1 b b 1 1 b b a a .
+        . a a b b b 1 b b 1 b b b a a .
+        . . a a b 1 1 1 b 1 b b a a . .
+        . . a a b b b b b b b b a a . .
+        . . . a a a b b b b a a a . . .
+        . . . . a a a a a a a a . . . .
+        . . . . . . a a a a . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_2pair = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . f . . f . . . . . . . 
-    . . . . . . . . f . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f . . . . . . . . f 
-    . . . . . f f f f . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . . . . f 
-    f . . f . f f . . . . . f f . . 
-    f f f . f . f . . f . f . . . . 
-    f . . . f . f . . f . f . . . . 
-    f . . . . f f f . f . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 8 8 8 8 . . . . . .
+        . . . . 8 8 8 8 8 8 8 8 . . . .
+        . . . 8 8 8 6 6 6 6 8 8 8 . . .
+        . . 8 8 6 6 6 6 6 6 6 6 8 8 . .
+        . . 8 8 6 1 1 6 6 1 1 6 8 8 . .
+        . 8 8 6 1 6 6 1 6 1 6 1 6 8 8 .
+        . 8 8 6 6 6 6 1 6 1 6 1 6 8 8 .
+        . 8 8 6 6 6 1 6 6 1 1 6 6 8 8 .
+        . 8 8 6 6 1 6 6 6 1 6 6 6 8 8 .
+        . . 8 8 1 1 1 1 6 1 6 6 8 8 . .
+        . . 8 8 6 6 6 6 6 6 6 6 8 8 . .
+        . . . 8 8 8 6 6 6 6 8 8 8 . . .
+        . . . . 8 8 8 8 8 8 8 8 . . . .
+        . . . . . . 8 8 8 8 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_3card = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . f f f f . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . . . . f . . . . . . . 
-    . . . . . . . . f . . . . . . f 
-    . . . . . f f f . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f . . . . . . . . . . f . f 
-    f . . . f f . . . f f . . f . . 
-    f . . f . f . . f . . . f f . . 
-    f . . f . f . . f . . f . f . . 
-    . f f . f f f . f . . . f f . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 4 4 4 4 . . . . . .
+        . . . . 4 4 4 4 4 4 4 4 . . . .
+        . . . 4 4 4 5 5 5 5 4 4 4 . . .
+        . . 4 4 5 5 5 5 5 5 5 5 4 4 . .
+        . . 4 4 c c c c 5 5 c c 4 4 . .
+        . 4 4 5 5 5 c 5 5 c 5 5 c 4 4 .
+        . 4 4 5 5 c c 5 5 c 5 5 5 4 4 .
+        . 4 4 5 5 5 5 c 5 c 5 5 5 4 4 .
+        . 4 4 5 5 5 5 c 5 c 5 5 c 4 4 .
+        . . 4 4 c c c 5 5 5 c c 4 4 . .
+        . . 4 4 5 5 5 5 5 5 5 5 4 4 . .
+        . . . 4 4 4 5 5 5 5 4 4 4 . . .
+        . . . . 4 4 4 4 4 4 4 4 . . . .
+        . . . . . . 4 4 4 4 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_4card = img`
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . f . . . . . . . .
-        . . . . . . f f . . . . . . . .
-        . . . . . f . f . . . . . . . .
-        . . . . f . . f . . . . . . . .
-        . . . . f f f f f . . . . . . f
-        . . . . . . . f . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . f f . . . . . . . . . . f . f
-        f . . . f f . . . f f . . f . .
-        f . . f . f . . f . . . f f . .
-        f . . f . f . . f . . f . f . .
-        . f f . f f f . f . . . f f . .
-        . . . . . . . . . . . . . . . .
+        . . . . . . 3 3 3 3 . . . . . .
+        . . . . 3 3 3 3 3 3 3 3 . . . .
+        . . . 3 3 3 d d d d 3 3 3 . . .
+        . . 3 3 d d d d d d d d 3 3 . .
+        . . 3 3 d d c d d d c c 3 3 . .
+        . 3 3 d d c c d d c d d c 3 3 .
+        . 3 3 d c d c d d c d d d 3 3 .
+        . 3 3 c d d c d d c d d d 3 3 .
+        . 3 3 c c c c c d c d d c 3 3 .
+        . . 3 3 d d c d d d c c 3 3 . .
+        . . 3 3 d d d d d d d d 3 3 . .
+        . . . 3 3 3 d d d d 3 3 3 . . .
+        . . . . 3 3 3 3 3 3 3 3 . . . .
+        . . . . . . 3 3 3 3 . . . . . .
         . . . . . . . . . . . . . . . .
     `
     img_hand_fullHouse = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . f . . . 
-    f . . . f . . f . f . . f . . . 
-    f f f . f . . f . f . . f . . . 
-    f . . . f . . f . f . . f . . f 
-    f . . . . f f . . f f . f f . . 
-    . . . . . . . . . . . . . . . . 
-    f . f . . . . . . . . . . f . f 
-    f . f . f . f . f . f f f . f . 
-    f f f f . f f . f . f . f f . . 
-    f . f f . f f . f . f . f . . . 
-    f . f . f . . f . f f . . f f . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . e e e e . . . . . .
+        . . . . e e e e e e e e . . . .
+        . . . e e e b b b b e e e . . .
+        . . e e b b b b b b b b e e . .
+        . . e e 1 1 1 b b 1 b 1 e e . .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . e e b 1 1 1 b b 1 1 1 b e e .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . . e e 1 b b 1 b 1 b 1 e e . .
+        . . e e b b b b b b b b e e . .
+        . . . e e e b b b b e e e . . .
+        . . . . e e e e e e e e . . . .
+        . . . . . . e e e e . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_flush = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f f f . f . . . . . . . . . 
-    . f . . . . f . . . . . . . . . 
-    . f f f . . f . . . f . . f . . 
-    . f . . . . f . . . f . . f . . 
-    . f . . . . f . . . f . . f . f 
-    . f . . . . . f f . . f f . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . f . . . . . . f 
-    . . . . . f f . f . . . . . . . 
-    . . . . f . . . f f f . . . . . 
-    . . . . . f . . f . . f . . . . 
-    . . . f f . . . f . . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 5 5 . . . . . .
+        . . . . 5 5 5 5 5 5 5 5 . . . .
+        . . . 5 5 5 d d d d 5 5 5 . . .
+        . . 5 5 d d d d d d d d 5 5 . .
+        . . 5 5 c c c d d c d d 5 5 . .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . 5 5 d c c c d d c d d d 5 5 .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . . 5 5 c d d d d c c c 5 5 . .
+        . . 5 5 d d d d d d d d 5 5 . .
+        . . . 5 5 5 d d d d 5 5 5 . . .
+        . . . . 5 5 5 5 5 5 5 5 . . . .
+        . . . . . . 5 5 5 5 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_straight = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f . . . . . . . . . . . . . 
-    f . . . . f . . . . . . . . . . 
-    . f . . f f f . f f . f f . . . 
-    . . f . . f . f . . f . f . . . 
-    f f . . . f . f . . . f f f . f 
-    . . . . . . . . . . . . . . . . 
-    . . . . f f . f . . . . . . . . 
-    . f . f . f . f . . . . f . . f 
-    . . . . f f . f f . . f f f . . 
-    . f . . . f . f . f . . f . . . 
-    . f . . f f . f . f . . f . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . b b b b . . . . . .
+        . . . . b b b b b b b b . . . .
+        . . . b b b d d d d b b b . . .
+        . . b b d d d d d d d d b b . .
+        . . b b d c c d d c c c b b . .
+        . b b d c d d c d d c d d b b .
+        . b b d d c d d d d c d d b b .
+        . b b d d d c d d d c d d b b .
+        . b b d c d d c d d c d d b b .
+        . . b b d c c d d d c d b b . .
+        . . b b d d d d d d d d b b . .
+        . . . b b b d d d d b b b . . .
+        . . . . b b b b b b b b . . . .
+        . . . . . . b b b b . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_straightFlush = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . f f . . . . f f f f . . . 
-    . . f . . f . . . f . . . . . f 
-    . . . f . . . . . f f f . . . . 
-    . . . . f . . . . f . . . . . . 
-    . . f . . f . . . f . . . . . f 
-    . . . f f . . f . f . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . 2 2 2 d d d d 2 2 2 . . .
+        . . 2 2 d d d d d d d d 2 2 . .
+        . . 2 2 d 2 2 d d 2 2 2 2 2 . .
+        . 2 2 d 2 d d 2 d 2 d d d 2 2 .
+        . 2 2 d d 2 d d d 2 2 2 d 2 2 .
+        . 2 2 d d d 2 d d 2 d d d 2 2 .
+        . 2 2 d 2 d d 2 d 2 d d d 2 2 .
+        . . 2 2 d 2 2 d d 2 d d 2 2 . .
+        . . 2 2 d d d d d d d d 2 2 . .
+        . . . 2 2 2 d d d d 2 2 2 . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     let hn_1pair = sprites.create(img_hand_1pair, SpriteKind.handName)
     hn_1pair.setPosition(108, 24)
@@ -1688,15 +1696,16 @@ function initHandImage() {
     hn_2pair.setPosition(108, 40)
     let hn_3card = sprites.create(img_hand_3card, SpriteKind.handName)
     hn_3card.setPosition(108, 56)
-    let hn_4card = sprites.create(img_hand_4card, SpriteKind.handName)
-    hn_4card.setPosition(108, 72)
-
-    let hn_fullHouse = sprites.create(img_hand_fullHouse, SpriteKind.handName)
-    hn_fullHouse.setPosition(139, 24)
-    let hn_flush = sprites.create(img_hand_flush, SpriteKind.handName)
-    hn_flush.setPosition(139, 40)
     let hn_straight = sprites.create(img_hand_straight, SpriteKind.handName)
-    hn_straight.setPosition(139, 56)
+    hn_straight.setPosition(108, 72)
+    
+
+    let hn_flush = sprites.create(img_hand_flush, SpriteKind.handName)
+    hn_flush.setPosition(139, 24)
+    let hn_fullHouse = sprites.create(img_hand_fullHouse, SpriteKind.handName)
+    hn_fullHouse.setPosition(139, 40)
+    let hn_4card = sprites.create(img_hand_4card, SpriteKind.handName)
+    hn_4card.setPosition(139, 56)
     let hn_straightFlush = sprites.create(img_hand_straightFlush, SpriteKind.handName)
     hn_straightFlush.setPosition(139, 72)
     
