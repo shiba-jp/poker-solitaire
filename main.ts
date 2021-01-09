@@ -322,7 +322,7 @@ function finishGame() {
         "\nS.F:75Px" + counter_sf
         , DialogLayout.Center)
     
-    game.over()
+    game.over((info.score() > info.highScore()))
 }
 function drawCard () {
     //before drawing card status.
