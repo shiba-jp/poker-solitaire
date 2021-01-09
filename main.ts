@@ -164,30 +164,35 @@ function calcScore() {
         if(k == 1){
             counter_1pair++
             currentHandsList.push(wayName[way] + "1pair")
+            wayMarks[way].setImage(img_handmark_1pair)
             console.logValue("1pair way", way)
             existSimpleHand = true
         }
         if(k == 2){
             counter_2pair++
             currentHandsList.push(wayName[way] + "2pair")
+            wayMarks[way].setImage(img_handmark_2pair)
             console.logValue("2pair way", way)
             existSimpleHand = true
         }
         if(k == 3){
             counter_3card++
             currentHandsList.push(wayName[way] + "3card")
+            wayMarks[way].setImage(img_handmark_3card)
             console.logValue("3card way", way)
             existSimpleHand = true
         }
         if(k == 4){
             counter_fullHouse++
             currentHandsList.push(wayName[way] + "FullHouse")
+            wayMarks[way].setImage(img_handmark_fullHouse)
             console.logValue("fullhouse way", way)
             existSimpleHand = true
         }
         if(k == 6){
             counter_4card++
             currentHandsList.push(wayName[way] + "4card")
+            wayMarks[way].setImage(img_handmark_4card)
             console.logValue("4card way", way)
             existSimpleHand = true
         }
@@ -230,16 +235,19 @@ function calcScore() {
         if(sf == 1) {
             counter_straight++
             currentHandsList.push(wayName[way] + "Straight")
+            wayMarks[way].setImage(img_handmark_straight)
             console.logValue("Straight way", way)
         }
         if(sf == 2) {
             counter_flush++
             currentHandsList.push(wayName[way] + "Flush")
+            wayMarks[way].setImage(img_handmark_flush)
             console.logValue("Flush way", way)
         }
         if(sf == 3) {
             counter_sf++
             currentHandsList.push(wayName[way] + "S.F")
+            wayMarks[way].setImage(img_handmark_straightFlush)
             console.logValue("S.F way", way)
         }
     }
@@ -1545,6 +1553,398 @@ function initCardImage () {
     imageList[50] = img_DiK
     imageList[51] = img_CbK
 }
+function initHandMarkImage() {
+    img_handmark_1pair = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . a a . . . . . . .
+        . . . . . . a d a a . . . . . .
+        . . . . . a a a a a a . . . . .
+        . . . . . a d a a a a . . . . .
+        . . . . . . a d a a . . . . . .
+        . . . . . . . a a . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_2pair = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 8 8 . . . . . . .
+        . . . . . . 8 d 8 8 . . . . . .
+        . . . . . 8 8 8 8 8 8 . . . . .
+        . . . . . 8 d 8 8 8 8 . . . . .
+        . . . . . . 8 d 8 8 . . . . . .
+        . . . . . . . 8 8 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_3card = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 4 4 . . . . . . .
+        . . . . . . 4 d 4 4 . . . . . .
+        . . . . . 4 4 4 4 4 4 . . . . .
+        . . . . . 4 d 4 4 4 4 . . . . .
+        . . . . . . 4 d 4 4 . . . . . .
+        . . . . . . . 4 4 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_4card = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 3 3 . . . . . . .
+        . . . . . . 3 1 3 3 . . . . . .
+        . . . . . 3 3 3 3 3 3 . . . . .
+        . . . . . 3 1 3 3 3 3 . . . . .
+        . . . . . . 3 1 3 3 . . . . . .
+        . . . . . . . 3 3 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_fullHouse = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . e e . . . . . . .
+        . . . . . . e d e e . . . . . .
+        . . . . . e e e e e e . . . . .
+        . . . . . e d e e e e . . . . .
+        . . . . . . e d e e . . . . . .
+        . . . . . . . e e . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_flush = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 5 5 . . . . . . .
+        . . . . . . 5 1 5 5 . . . . . .
+        . . . . . 5 5 5 5 5 5 . . . . .
+        . . . . . 5 1 5 5 5 5 . . . . .
+        . . . . . . 5 1 5 5 . . . . . .
+        . . . . . . . 5 5 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_straight = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 6 6 . . . . . . .
+        . . . . . . 6 1 6 6 . . . . . .
+        . . . . . 6 6 6 6 6 6 . . . . .
+        . . . . . 6 1 6 6 6 6 . . . . .
+        . . . . . . 6 1 6 6 . . . . . .
+        . . . . . . . 6 6 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_straightFlush = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . 2 1 2 2 . . . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
+        . . . . . 2 1 2 2 2 2 . . . . .
+        . . . . . . 2 1 2 2 . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+}
+function initMarkSprite() {
+    mark_r1 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_r2 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_r3 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_r4 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_r5 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_r1.setPosition(10, 24)
+    mark_r2.setPosition(10, 40)
+    mark_r3.setPosition(10, 56)
+    mark_r4.setPosition(10, 72)
+    mark_r5.setPosition(10, 88)
+
+    mark_c1 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_c2 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_c3 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_c4 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_c5 = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_c1.setPosition(24, 10)
+    mark_c2.setPosition(40, 10)
+    mark_c3.setPosition(56, 10)
+    mark_c4.setPosition(72, 10)
+    mark_c5.setPosition(88, 10)
+
+    mark_sl_lup = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    mark_sl_rup = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+    
+    mark_sl_lup.setPosition(100, 100)
+    mark_sl_rup.setPosition(12, 100)
+
+    wayMarks[0] = mark_r1
+    wayMarks[1] = mark_r2
+    wayMarks[2] = mark_r3
+    wayMarks[3] = mark_r4
+    wayMarks[4] = mark_r5
+    wayMarks[5] = mark_c1
+    wayMarks[6] = mark_c2
+    wayMarks[7] = mark_c3
+    wayMarks[8] = mark_c4
+    wayMarks[9] = mark_c5
+    wayMarks[10] = mark_sl_rup
+    wayMarks[11] = mark_sl_lup
+}
 function initHandImage() {
     img_hand_1pair = img`
         . . . . . . . . . . . . . . . .
@@ -1656,20 +2056,20 @@ function initHandImage() {
     `
     img_hand_straight = img`
         . . . . . . . . . . . . . . . .
-        . . . . . . b b b b . . . . . .
-        . . . . b b b b b b b b . . . .
-        . . . b b b d d d d b b b . . .
-        . . b b d d d d d d d d b b . .
-        . . b b d c c d d c c c b b . .
-        . b b d c d d c d d c d d b b .
-        . b b d d c d d d d c d d b b .
-        . b b d d d c d d d c d d b b .
-        . b b d c d d c d d c d d b b .
-        . . b b d c c d d d c d b b . .
-        . . b b d d d d d d d d b b . .
-        . . . b b b d d d d b b b . . .
-        . . . . b b b b b b b b . . . .
-        . . . . . . b b b b . . . . . .
+        . . . . . . 6 6 6 6 . . . . . .
+        . . . . 6 6 6 6 6 6 6 6 . . . .
+        . . . 6 6 6 7 7 7 7 6 6 6 . . .
+        . . 6 6 7 7 7 7 7 7 7 7 6 6 . .
+        . . 6 6 7 c c 7 7 c c c 6 6 . .
+        . 6 6 7 c 7 7 c 7 7 c 7 7 6 6 .
+        . 6 6 7 7 c 7 7 7 7 c 7 7 6 6 .
+        . 6 6 7 7 7 c 7 7 7 c 7 7 6 6 .
+        . 6 6 7 c 7 7 c 7 7 c 7 7 6 6 .
+        . . 6 6 7 c c 7 7 7 c 7 6 6 . .
+        . . 6 6 7 7 7 7 7 7 7 7 6 6 . .
+        . . . 6 6 6 7 7 7 7 6 6 6 . . .
+        . . . . 6 6 6 6 6 6 6 6 . . . .
+        . . . . . . 6 6 6 6 . . . . . .
         . . . . . . . . . . . . . . . .
     `
     img_hand_straightFlush = img`
@@ -1989,6 +2389,7 @@ let img_n6: Image = null
 let img_n7: Image = null
 let img_n8: Image = null
 let img_n9: Image = null
+
 let img_hand_1pair: Image = null
 let img_hand_2pair: Image = null
 let img_hand_3card: Image = null
@@ -1999,6 +2400,15 @@ let img_hand_straight: Image = null
 let img_hand_straightFlush: Image = null
 let imageList: Image[] = []
 let imgNumList: Image[] = []
+
+let img_handmark_1pair: Image = null
+let img_handmark_2pair: Image = null
+let img_handmark_3card: Image = null
+let img_handmark_4card: Image = null
+let img_handmark_fullHouse: Image = null
+let img_handmark_flush: Image = null
+let img_handmark_straight: Image = null
+let img_handmark_straightFlush: Image = null
 
 let currentCardNo = 0
 let currentCard: Sprite = null
@@ -2027,6 +2437,20 @@ let straight_num_fp: Sprite = null
 let straight_num_tp: Sprite = null
 let sf_num_fp: Sprite = null
 let sf_num_tp: Sprite = null
+
+let mark_r1: Sprite = null
+let mark_r2: Sprite = null
+let mark_r3: Sprite = null
+let mark_r4: Sprite = null
+let mark_r5: Sprite = null
+let mark_c1: Sprite = null
+let mark_c2: Sprite = null
+let mark_c3: Sprite = null
+let mark_c4: Sprite = null
+let mark_c5: Sprite = null
+let mark_sl_rup: Sprite = null //slant right up
+let mark_sl_lup: Sprite = null //slant left up
+let wayMarks: Sprite[] = [];
 
 let girl: Sprite = null
 let girlsDialogue: string[] = [];
@@ -2346,6 +2770,8 @@ initCardMap()
 initCardImage()
 initNumImage()
 initHandImage()
+initHandMarkImage()
+initMarkSprite();
 initWayName()
 initCursor()
 initGirl()
