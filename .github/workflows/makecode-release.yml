@@ -23,11 +23,11 @@ jobs:
         run: |
           npm install -g pxt
           pxt target arcade
-      - name: build js
-        run: |
-          pxt clean
-          pxt install
-          pxt build --cloud
+#      - name: build js
+#        run: |
+#          pxt clean
+#          pxt install
+#          pxt build --cloud
       - name: build D51
         continue-on-error: true
         run: |
