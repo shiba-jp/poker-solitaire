@@ -34,7 +34,8 @@ jobs:
           pxt clean
           pxt install --hw samd51
           pxt build --hw samd51 --cloud
-          cp ./built/binary.uf2 poker-solitaire.uf2
+          mv ./built/binary.uf2 ./built/poker-solitaire.uf2
+#          cp ./built/binary.uf2 binary-d51.uf2
 #      - name: build F4
 #        continue-on-error: true
 #        run: |
