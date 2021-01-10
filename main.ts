@@ -1757,7 +1757,7 @@ function initHandImage() {
         . e e b 1 1 1 b b 1 1 1 b e e .
         . e e b 1 b b b b 1 b 1 b e e .
         . e e b 1 b b b b 1 b 1 b e e .
-        . . e e 1 b b 1 b 1 b 1 e e . .
+        . . e e 1 b b b b 1 b 1 e e . .
         . . e e b b b b b b b b e e . .
         . . . e e e b b b b e e e . . .
         . . . . e e e e e e e e . . . .
