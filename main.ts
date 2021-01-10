@@ -7,18 +7,8 @@ namespace SpriteKind {
     export const score = SpriteKind.create()
 }
 function initFields () {
-    columns = [4]
-    columns[0] = 24
-    columns[1] = 40
-    columns[2] = 56
-    columns[3] = 72
-    columns[4] = 88
-    rows = [4]
-    rows[0] = 24
-    rows[1] = 40
-    rows[2] = 56
-    rows[3] = 72
-    rows[4] = 88
+    columns = [24, 40, 56, 72, 88]
+    rows = [24, 40, 56, 72, 88]
 }
 function initCursor () {
     cursor = sprites.create(img`
@@ -44,12 +34,36 @@ function initCursor () {
     posY = 0
     moveSprite(cursor, posX, posY)
 }
+function drawCard () {
+    //before drawing card status.
+    if(status == 2) {
+        throwCard = sprites.create(img_throwCard, SpriteKind.animeCard)
+        throwCard.setPosition(32, 110)
+        girl.say("Draw!", 500)
+        pause(200)
+        
+        throwCard.setPosition(75, 110)
+        pause(300)
+        //throwCard.ax = 400
+
+        /**
+        currentCardNo = getCardNo()
+        putCardNoList.push(currentCardNo)
+        currentCard = sprites.create(imageList[currentCardNo], SpriteKind.card)
+        currentCard.setPosition(75, 110)
+        status = 1 //After drawing card status.
+
+        if (putCardNoList.length > 25) {
+            finishGame()
+        }
+         */
+    }
+}
 sprites.onOverlap(SpriteKind.animeCard, SpriteKind.dummy, function (sprite, otherSprite) {
     throwCard.destroy()
     currentCardNo = getCardNo()
     putCardNoList.push(currentCardNo)
     currentCard = sprites.create(imageList[currentCardNo], SpriteKind.card)
-    putCardList.push(currentCard)
     currentCard.setPosition(75, 110)
     status = 1 //After drawing card status.
 
@@ -164,30 +178,35 @@ function calcScore() {
         if(k == 1){
             counter_1pair++
             currentHandsList.push(wayName[way] + "1pair")
+            wayMarks[way].setImage(img_handmark_1pair)
             console.logValue("1pair way", way)
             existSimpleHand = true
         }
         if(k == 2){
             counter_2pair++
             currentHandsList.push(wayName[way] + "2pair")
+            wayMarks[way].setImage(img_handmark_2pair)
             console.logValue("2pair way", way)
             existSimpleHand = true
         }
         if(k == 3){
             counter_3card++
             currentHandsList.push(wayName[way] + "3card")
+            wayMarks[way].setImage(img_handmark_3card)
             console.logValue("3card way", way)
             existSimpleHand = true
         }
         if(k == 4){
             counter_fullHouse++
             currentHandsList.push(wayName[way] + "FullHouse")
+            wayMarks[way].setImage(img_handmark_fullHouse)
             console.logValue("fullhouse way", way)
             existSimpleHand = true
         }
         if(k == 6){
             counter_4card++
             currentHandsList.push(wayName[way] + "4card")
+            wayMarks[way].setImage(img_handmark_4card)
             console.logValue("4card way", way)
             existSimpleHand = true
         }
@@ -230,16 +249,19 @@ function calcScore() {
         if(sf == 1) {
             counter_straight++
             currentHandsList.push(wayName[way] + "Straight")
+            wayMarks[way].setImage(img_handmark_straight)
             console.logValue("Straight way", way)
         }
         if(sf == 2) {
             counter_flush++
             currentHandsList.push(wayName[way] + "Flush")
+            wayMarks[way].setImage(img_handmark_flush)
             console.logValue("Flush way", way)
         }
         if(sf == 3) {
             counter_sf++
             currentHandsList.push(wayName[way] + "S.F")
+            wayMarks[way].setImage(img_handmark_straightFlush)
             console.logValue("S.F way", way)
         }
     }
@@ -314,33 +336,7 @@ function finishGame() {
         "\nS.F:75Px" + counter_sf
         , DialogLayout.Center)
     
-    game.over()
-}
-function drawCard () {
-    //before drawing card status.
-    if(status == 2) {
-        throwCard = sprites.create(img`
-        . . . . . . . . . . . . . . . 
-        . . 8 8 8 8 8 8 8 8 8 8 8 . . 
-        . 8 8 1 1 1 1 1 1 1 1 1 8 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
-        . 8 8 1 1 1 1 1 1 1 1 1 8 8 . 
-        . . 8 8 8 8 8 8 8 8 8 8 8 . . 
-        . . . . . . . . . . . . . . . 
-        `, SpriteKind.animeCard)
-        throwCard.setPosition(32, 110)
-        throwCard.ax = 400
-    }
+    game.over((info.score() > info.highScore()))
 }
 game.onUpdateInterval(5000, function() {
     if(girl != null) {
@@ -403,116 +399,108 @@ function moveSprite (sprite: Sprite, posX: number, posY: number) {
     }
 }
 function initNumImage() {
-    img_n0 = img`
-        f f f f f f
-        f f 1 1 f f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f f 1 1 f f
-        f f f f f f
-    `
-    img_n1 = img`
-        f f f f f f
-        f f 1 f f f
-        f 1 1 f f f
-        f f 1 f f f
-        f f 1 f f f
-        f f 1 f f f
-        f 1 1 1 f f
-        f f f f f f
-    `
-    img_n2 = img`
-        f f f f f f
-        f f 1 1 f f
-        f 1 f f 1 f
-        f f f f 1 f
-        f f f 1 f f
-        f f 1 f f f
-        f 1 1 1 1 f
-        f f f f f f
-    `
-    img_n3 = img`
-        f f f f f f
-        f 1 1 1 1 f
-        f f f 1 f f
-        f f 1 1 f f
-        f f f f 1 f
-        f f f f 1 f
-        f 1 1 1 f f
-        f f f f f f
-    `
-    img_n4 = img`
-        f f f f f f
-        f f f 1 f f
-        f f 1 1 f f
-        f 1 f 1 f f
-        1 f f 1 f f
-        1 1 1 1 1 f
-        f f f 1 f f
-        f f f f f f
-    `
-    img_n5 = img`
-        f f f f f f
-        f 1 1 1 1 f
-        f 1 f f f f
-        f 1 1 1 f f
-        f f f f 1 f
-        f f f f 1 f
-        f 1 1 1 f f
-        f f f f f f
-    `
-    img_n6 = img`
-        f f f f f f
-        f f 1 1 f f
-        f 1 f f f f
-        f 1 1 1 f f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f f 1 1 f f
-        f f f f f f
-    `
-    img_n7= img`
-        f f f f f f
-        f 1 1 1 1 f
-        f f f f 1 f
-        f f f f 1 f
-        f f f 1 f f
-        f f 1 f f f
-        f f 1 f f f
-        f f f f f f
-    `
-    img_n8 = img`
-        f f f f f f
-        f f 1 1 f f
-        f 1 f f 1 f
-        f f 1 1 f f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f f 1 1 f f
-        f f f f f f
-    `
-    img_n9 = img`
-        f f f f f f
-        f f 1 1 f f
-        f 1 f f 1 f
-        f 1 f f 1 f
-        f f 1 1 1 f
-        f f f f 1 f
-        f f 1 1 f f
-        f f f f f f
-    `
-    imgNumList[0] = img_n0
-    imgNumList[1] = img_n1
-    imgNumList[2] = img_n2
-    imgNumList[3] = img_n3
-    imgNumList[4] = img_n4
-    imgNumList[5] = img_n5
-    imgNumList[6] = img_n6
-    imgNumList[7] = img_n7
-    imgNumList[8] = img_n8
-    imgNumList[9] = img_n9
+    imgNumList = [
+        img_n0 = img`
+            f f f f f f
+            f f 1 1 f f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f f 1 1 f f
+            f f f f f f
+        `,
+        img_n1 = img`
+            f f f f f f
+            f f 1 f f f
+            f 1 1 f f f
+            f f 1 f f f
+            f f 1 f f f
+            f f 1 f f f
+            f 1 1 1 f f
+            f f f f f f
+        `,
+        img_n2 = img`
+            f f f f f f
+            f f 1 1 f f
+            f 1 f f 1 f
+            f f f f 1 f
+            f f f 1 f f
+            f f 1 f f f
+            f 1 1 1 1 f
+            f f f f f f
+        `,
+        img_n3 = img`
+            f f f f f f
+            f 1 1 1 1 f
+            f f f 1 f f
+            f f 1 1 f f
+            f f f f 1 f
+            f f f f 1 f
+            f 1 1 1 f f
+            f f f f f f
+        `,
+        img_n4 = img`
+            f f f f f f
+            f f f 1 f f
+            f f 1 1 f f
+            f 1 f 1 f f
+            1 f f 1 f f
+            1 1 1 1 1 f
+            f f f 1 f f
+            f f f f f f
+        `,
+        img_n5 = img`
+            f f f f f f
+            f 1 1 1 1 f
+            f 1 f f f f
+            f 1 1 1 f f
+            f f f f 1 f
+            f f f f 1 f
+            f 1 1 1 f f
+            f f f f f f
+        `,
+        img_n6 = img`
+            f f f f f f
+            f f 1 1 f f
+            f 1 f f f f
+            f 1 1 1 f f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f f 1 1 f f
+            f f f f f f
+        `,
+        img_n7= img`
+            f f f f f f
+            f 1 1 1 1 f
+            f f f f 1 f
+            f f f f 1 f
+            f f f 1 f f
+            f f 1 f f f
+            f f 1 f f f
+            f f f f f f
+        `,
+        img_n8 = img`
+            f f f f f f
+            f f 1 1 f f
+            f 1 f f 1 f
+            f f 1 1 f f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f f 1 1 f f
+            f f f f f f
+        `,
+        img_n9 = img`
+            f f f f f f
+            f f 1 1 f f
+            f 1 f f 1 f
+            f 1 f f 1 f
+            f f 1 1 1 f
+            f f f f 1 f
+            f f 1 1 f f
+            f f f f f f
+        `
+    ]
 
     onePair_num_tp = sprites.create(img_n0, SpriteKind.score)
     onePair_num_fp = sprites.create(img_n0, SpriteKind.score)
@@ -530,1157 +518,1305 @@ function initNumImage() {
     straight_num_fp = sprites.create(img_n0, SpriteKind.score)
     sf_num_tp = sprites.create(img_n0, SpriteKind.score)
     sf_num_fp = sprites.create(img_n0, SpriteKind.score)
+
     onePair_num_tp.setPosition(120, 24)
     onePair_num_fp.setPosition(126, 24)
+
     twoPair_num_tp.setPosition(120, 40)
     twoPair_num_fp.setPosition(126, 40)
+
     threeCard_num_tp.setPosition(120, 56)
     threeCard_num_fp.setPosition(126, 56)
-    fourCard_num_tp.setPosition(120, 72)
-    fourCard_num_fp.setPosition(126, 72)
-    fullHouse_num_tp.setPosition(151, 24)
-    fullHouse_num_fp.setPosition(157, 24)
-    flush_num_tp.setPosition(151, 40)
-    flush_num_fp.setPosition(157, 40)
-    straight_num_tp.setPosition(151, 56)
-    straight_num_fp.setPosition(157, 56)
+
+    straight_num_tp.setPosition(120, 72)
+    straight_num_fp.setPosition(126, 72)
+
+    flush_num_tp.setPosition(151, 24)
+    flush_num_fp.setPosition(157, 24)
+
+    fullHouse_num_tp.setPosition(151, 40)
+    fullHouse_num_fp.setPosition(157, 40)
+
+    fourCard_num_tp.setPosition(151, 56)
+    fourCard_num_fp.setPosition(157, 56)
+
     sf_num_tp.setPosition(151, 72)
     sf_num_fp.setPosition(157, 72)
 }
 function initCardImage () {
-    img_SpA = img`
+    imageList = [
+        img_SpA = img`
+            . . . . . . . . . . . . . . . .
+            . . . c c c c c c c c c c . . .
+            . . c 1 1 1 1 1 1 1 1 1 1 c . .
+            . . c 1 c c c 1 1 1 1 1 1 c . .
+            . . c 1 c 1 c 1 1 1 1 1 1 c . .
+            . . c 1 c c c 1 1 1 1 1 1 c . .
+            . . c 1 c 1 c 1 1 1 1 1 1 c . .
+            . . c 1 c 1 c 1 1 1 1 1 1 c . .
+            . . c 1 1 1 1 1 1 c 1 1 1 c . .
+            . . c 1 1 1 1 1 c c c 1 1 c . .
+            . . c 1 1 1 1 c c c c c 1 c . .
+            . . c 1 1 1 1 c c c c c 1 c . .
+            . . c 1 1 1 1 1 1 c 1 1 1 c . .
+            . . c 1 1 1 1 1 1 1 1 1 1 c . .
+            . . . c c c c c c c c c c . . .
+            . . . . . . . . . . . . . . . .
+        `,
+        img_HtA = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_DiA = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_CbA = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        imb_Sp2 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht2 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di2 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        imb_Cb2 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp3 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht3 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di3 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb3 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp4 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht4 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di4 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb4 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp5 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht5 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di5 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb5 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp6 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht6 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di6 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb6 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp7 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht7 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di7 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb7 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp8 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht8 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di8 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb8 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp9 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht9 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di9 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb9 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Sp10 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c c c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c c 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Ht10 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Di10 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 2 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_Cb10 = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c c c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 c 1 1 1 1 c . . 
+            . . c 1 c 1 c c 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_SpJ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c 1 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_HtJ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_DiJ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_CbJ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c 1 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_SpQ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 c 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_HtQ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 2 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_DiQ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 2 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_CbQ = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c c 1 1 1 1 1 1 c . . 
+            . . c 1 1 c 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_SpK = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c c 1 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 c c c c c 1 c . . 
+            . . c 1 1 1 1 1 1 c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_HtK = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_DiK = img`
+            . . . . . . . . . . . . . . . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
+            . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
+            . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
+            . . . 2 2 2 2 2 2 2 2 2 2 . . . 
+            . . . . . . . . . . . . . . . . 
+            `,
+        img_CbK = img`
+            . . . . . . . . . . . . . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c c 1 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 c 1 c 1 1 1 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 c c 1 1 c c 1 c . . 
+            . . c 1 1 1 1 1 c c 1 1 1 c . . 
+            . . c 1 1 1 1 1 1 1 1 1 1 c . . 
+            . . . c c c c c c c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `
+    ]
+}
+function initHandMarkImage() {
+    img_handmark_1pair = img`
         . . . . . . . . . . . . . . . .
-        . . . c c c c c c c c c c . . .
-        . . c 1 1 1 1 1 1 1 1 1 1 c . .
-        . . c 1 c c c 1 1 1 1 1 1 c . .
-        . . c 1 c 1 c 1 1 1 1 1 1 c . .
-        . . c 1 c c c 1 1 1 1 1 1 c . .
-        . . c 1 c 1 c 1 1 1 1 1 1 c . .
-        . . c 1 c 1 c 1 1 1 1 1 1 c . .
-        . . c 1 1 1 1 1 1 c 1 1 1 c . .
-        . . c 1 1 1 1 1 c c c 1 1 c . .
-        . . c 1 1 1 1 c c c c c 1 c . .
-        . . c 1 1 1 1 c c c c c 1 c . .
-        . . c 1 1 1 1 1 1 c 1 1 1 c . .
-        . . c 1 1 1 1 1 1 1 1 1 1 c . .
-        . . . c c c c c c c c c c . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . a a . . . . . . .
+        . . . . . . a d a a . . . . . .
+        . . . . . a a a a a a . . . . .
+        . . . . . a d a a a a . . . . .
+        . . . . . . a d a a . . . . . .
+        . . . . . . . a a . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    img_HtA = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_DiA = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_CbA = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    imb_Sp2 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht2 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di2 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    imb_Cb2 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp3 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht3 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di3 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb3 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp4 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht4 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di4 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb4 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp5 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht5 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di5 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb5 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp6 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht6 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di6 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb6 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp7 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht7 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di7 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb7 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp8 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht8 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di8 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb8 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp9 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht9 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di9 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb9 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Sp10 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c c c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c c 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Ht10 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Di10 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 2 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 2 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 2 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_Cb10 = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c c c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 c 1 1 1 1 c . . 
-        . . c 1 c 1 c c 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_SpJ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c 1 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_HtJ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_DiJ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_CbJ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c 1 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_SpQ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 c 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_HtQ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 2 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_DiQ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 2 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_CbQ = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c c 1 1 1 1 1 1 c . . 
-        . . c 1 1 c 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_SpK = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c c 1 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 c c c c c 1 c . . 
-        . . c 1 1 1 1 1 1 c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_HtK = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 1 2 2 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_DiK = img`
-        . . . . . . . . . . . . . . . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 2 1 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 2 1 2 1 1 1 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 2 2 2 2 2 1 2 . . 
-        . . 2 1 1 1 1 1 2 2 2 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 2 1 1 1 2 . . 
-        . . 2 1 1 1 1 1 1 1 1 1 1 2 . . 
-        . . . 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    img_CbK = img`
-        . . . . . . . . . . . . . . . . 
-        . . . c c c c c c c c c c . . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c c 1 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 c 1 c 1 1 1 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 c c 1 1 c c 1 c . . 
-        . . c 1 1 1 1 1 c c 1 1 1 c . . 
-        . . c 1 1 1 1 1 1 1 1 1 1 c . . 
-        . . . c c c c c c c c c c . . . 
-        . . . . . . . . . . . . . . . . 
-        `
-    imageList[0] = img_SpA
-    imageList[1] = img_HtA
-    imageList[2] = img_DiA
-    imageList[3] = img_CbA
-    imageList[4] = imb_Sp2
-    imageList[5] = img_Ht2
-    imageList[6] = img_Di2
-    imageList[7] = imb_Cb2
-    imageList[8] = img_Sp3
-    imageList[9] = img_Ht3
-    imageList[10] = img_Di3
-    imageList[11] = img_Cb3
-    imageList[12] = img_Sp4
-    imageList[13] = img_Ht4
-    imageList[14] = img_Di4
-    imageList[15] = img_Cb4
-    imageList[16] = img_Sp5
-    imageList[17] = img_Ht5
-    imageList[18] = img_Di5
-    imageList[19] = img_Cb5
-    imageList[20] = img_Sp6
-    imageList[21] = img_Ht6
-    imageList[22] = img_Di6
-    imageList[23] = img_Cb6
-    imageList[24] = img_Sp7
-    imageList[25] = img_Ht7
-    imageList[26] = img_Di7
-    imageList[27] = img_Cb7
-    imageList[28] = img_Sp8
-    imageList[29] = img_Ht8
-    imageList[30] = img_Di8
-    imageList[31] = img_Cb8
-    imageList[32] = img_Sp9
-    imageList[33] = img_Ht9
-    imageList[34] = img_Di9
-    imageList[35] = img_Cb9
-    imageList[36] = img_Sp10
-    imageList[37] = img_Ht10
-    imageList[38] = img_Di10
-    imageList[39] = img_Cb10
-    imageList[40] = img_SpJ
-    imageList[41] = img_HtJ
-    imageList[42] = img_DiJ
-    imageList[43] = img_CbJ
-    imageList[44] = img_SpQ
-    imageList[45] = img_HtQ
-    imageList[46] = img_DiQ
-    imageList[47] = img_CbQ
-    imageList[48] = img_SpK
-    imageList[49] = img_HtK
-    imageList[50] = img_DiK
-    imageList[51] = img_CbK
+    img_handmark_2pair = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 8 8 . . . . . . .
+        . . . . . . 8 d 8 8 . . . . . .
+        . . . . . 8 8 8 8 8 8 . . . . .
+        . . . . . 8 d 8 8 8 8 . . . . .
+        . . . . . . 8 d 8 8 . . . . . .
+        . . . . . . . 8 8 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_3card = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 4 4 . . . . . . .
+        . . . . . . 4 d 4 4 . . . . . .
+        . . . . . 4 4 4 4 4 4 . . . . .
+        . . . . . 4 d 4 4 4 4 . . . . .
+        . . . . . . 4 d 4 4 . . . . . .
+        . . . . . . . 4 4 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_4card = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 3 3 . . . . . . .
+        . . . . . . 3 1 3 3 . . . . . .
+        . . . . . 3 3 3 3 3 3 . . . . .
+        . . . . . 3 1 3 3 3 3 . . . . .
+        . . . . . . 3 1 3 3 . . . . . .
+        . . . . . . . 3 3 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_fullHouse = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . e e . . . . . . .
+        . . . . . . e d e e . . . . . .
+        . . . . . e e e e e e . . . . .
+        . . . . . e d e e e e . . . . .
+        . . . . . . e d e e . . . . . .
+        . . . . . . . e e . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_flush = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 5 5 . . . . . . .
+        . . . . . . 5 1 5 5 . . . . . .
+        . . . . . 5 5 5 5 5 5 . . . . .
+        . . . . . 5 1 5 5 5 5 . . . . .
+        . . . . . . 5 1 5 5 . . . . . .
+        . . . . . . . 5 5 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_straight = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 6 6 . . . . . . .
+        . . . . . . 6 1 6 6 . . . . . .
+        . . . . . 6 6 6 6 6 6 . . . . .
+        . . . . . 6 1 6 6 6 6 . . . . .
+        . . . . . . 6 1 6 6 . . . . . .
+        . . . . . . . 6 6 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    img_handmark_straightFlush = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . 2 1 2 2 . . . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
+        . . . . . 2 1 2 2 2 2 . . . . .
+        . . . . . . 2 1 2 2 . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+}
+function initMarkSprite() {
+    mark_r1 = sprites.create(img_empty)
+    mark_r2 = sprites.create(img_empty)
+    mark_r3 = sprites.create(img_empty)
+    mark_r4 = sprites.create(img_empty)
+    mark_r5 = sprites.create(img_empty)
+    mark_r1.setPosition(10, 24)
+    mark_r2.setPosition(10, 40)
+    mark_r3.setPosition(10, 56)
+    mark_r4.setPosition(10, 72)
+    mark_r5.setPosition(10, 88)
+
+    mark_c1 = sprites.create(img_empty)
+    mark_c2 = sprites.create(img_empty)
+    mark_c3 = sprites.create(img_empty)
+    mark_c4 = sprites.create(img_empty)
+    mark_c5 = sprites.create(img_empty)
+    mark_c1.setPosition(24, 10)
+    mark_c2.setPosition(40, 10)
+    mark_c3.setPosition(56, 10)
+    mark_c4.setPosition(72, 10)
+    mark_c5.setPosition(88, 10)
+
+    mark_sl_lup = sprites.create(img_empty)
+    mark_sl_rup = sprites.create(img_empty)
+    
+    mark_sl_lup.setPosition(100, 100)
+    mark_sl_rup.setPosition(12, 100)
+
+    wayMarks = [
+        mark_r1,
+        mark_r2,
+        mark_r3,
+        mark_r4,
+        mark_r5,
+        mark_c1,
+        mark_c2,
+        mark_c3,
+        mark_c4,
+        mark_c5,
+        mark_sl_rup,
+        mark_sl_lup
+    ]
 }
 function initHandImage() {
     img_hand_1pair = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . . f . . . . . . . f 
-    . . . . . . f f f . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . . . . f 
-    f . . f . f f . . . . . f f . . 
-    f f f . f . f . . f . f . . . . 
-    f . . . f . f . . f . f . . . . 
-    f . . . . f f f . f . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . a a a a . . . . . .
+        . . . . a a a a a a a a . . . .
+        . . . a a a b b b b a a a . . .
+        . . a a b b b b b b b b a a . .
+        . . a a b b 1 b b 1 1 b a a . .
+        . a a b b 1 1 b b 1 b 1 b a a .
+        . a a b b b 1 b b 1 b 1 b a a .
+        . a a b b b 1 b b 1 1 b b a a .
+        . a a b b b 1 b b 1 b b b a a .
+        . . a a b 1 1 1 b 1 b b a a . .
+        . . a a b b b b b b b b a a . .
+        . . . a a a b b b b a a a . . .
+        . . . . a a a a a a a a . . . .
+        . . . . . . a a a a . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_2pair = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . f . . f . . . . . . . 
-    . . . . . . . . f . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f . . . . . . . . f 
-    . . . . . f f f f . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . . . . f 
-    f . . f . f f . . . . . f f . . 
-    f f f . f . f . . f . f . . . . 
-    f . . . f . f . . f . f . . . . 
-    f . . . . f f f . f . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 8 8 8 8 . . . . . .
+        . . . . 8 8 8 8 8 8 8 8 . . . .
+        . . . 8 8 8 6 6 6 6 8 8 8 . . .
+        . . 8 8 6 6 6 6 6 6 6 6 8 8 . .
+        . . 8 8 6 1 1 6 6 1 1 6 8 8 . .
+        . 8 8 6 1 6 6 1 6 1 6 1 6 8 8 .
+        . 8 8 6 6 6 6 1 6 1 6 1 6 8 8 .
+        . 8 8 6 6 6 1 6 6 1 1 6 6 8 8 .
+        . 8 8 6 6 1 6 6 6 1 6 6 6 8 8 .
+        . . 8 8 1 1 1 1 6 1 6 6 8 8 . .
+        . . 8 8 6 6 6 6 6 6 6 6 8 8 . .
+        . . . 8 8 8 6 6 6 6 8 8 8 . . .
+        . . . . 8 8 8 8 8 8 8 8 . . . .
+        . . . . . . 8 8 8 8 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_3card = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . f f f f . . . . . . . 
-    . . . . . . . f . . . . . . . . 
-    . . . . . . f f . . . . . . . . 
-    . . . . . . . . f . . . . . . . 
-    . . . . . . . . f . . . . . . f 
-    . . . . . f f f . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f . . . . . . . . . . f . f 
-    f . . . f f . . . f f . . f . . 
-    f . . f . f . . f . . . f f . . 
-    f . . f . f . . f . . f . f . . 
-    . f f . f f f . f . . . f f . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 4 4 4 4 . . . . . .
+        . . . . 4 4 4 4 4 4 4 4 . . . .
+        . . . 4 4 4 5 5 5 5 4 4 4 . . .
+        . . 4 4 5 5 5 5 5 5 5 5 4 4 . .
+        . . 4 4 c c c c 5 5 c c 4 4 . .
+        . 4 4 5 5 5 c 5 5 c 5 5 c 4 4 .
+        . 4 4 5 5 c c 5 5 c 5 5 5 4 4 .
+        . 4 4 5 5 5 5 c 5 c 5 5 5 4 4 .
+        . 4 4 5 5 5 5 c 5 c 5 5 c 4 4 .
+        . . 4 4 c c c 5 5 5 c c 4 4 . .
+        . . 4 4 5 5 5 5 5 5 5 5 4 4 . .
+        . . . 4 4 4 5 5 5 5 4 4 4 . . .
+        . . . . 4 4 4 4 4 4 4 4 . . . .
+        . . . . . . 4 4 4 4 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_4card = img`
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . f . . . . . . . .
-        . . . . . . f f . . . . . . . .
-        . . . . . f . f . . . . . . . .
-        . . . . f . . f . . . . . . . .
-        . . . . f f f f f . . . . . . f
-        . . . . . . . f . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . f f . . . . . . . . . . f . f
-        f . . . f f . . . f f . . f . .
-        f . . f . f . . f . . . f f . .
-        f . . f . f . . f . . f . f . .
-        . f f . f f f . f . . . f f . .
-        . . . . . . . . . . . . . . . .
+        . . . . . . 3 3 3 3 . . . . . .
+        . . . . 3 3 3 3 3 3 3 3 . . . .
+        . . . 3 3 3 d d d d 3 3 3 . . .
+        . . 3 3 d d d d d d d d 3 3 . .
+        . . 3 3 d d c d d d c c 3 3 . .
+        . 3 3 d d c c d d c d d c 3 3 .
+        . 3 3 d c d c d d c d d d 3 3 .
+        . 3 3 c d d c d d c d d d 3 3 .
+        . 3 3 c c c c c d c d d c 3 3 .
+        . . 3 3 d d c d d d c c 3 3 . .
+        . . 3 3 d d d d d d d d 3 3 . .
+        . . . 3 3 3 d d d d 3 3 3 . . .
+        . . . . 3 3 3 3 3 3 3 3 . . . .
+        . . . . . . 3 3 3 3 . . . . . .
         . . . . . . . . . . . . . . . .
     `
     img_hand_fullHouse = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    f f f . . . . . . f . . f . . . 
-    f . . . f . . f . f . . f . . . 
-    f f f . f . . f . f . . f . . . 
-    f . . . f . . f . f . . f . . f 
-    f . . . . f f . . f f . f f . . 
-    . . . . . . . . . . . . . . . . 
-    f . f . . . . . . . . . . f . f 
-    f . f . f . f . f . f f f . f . 
-    f f f f . f f . f . f . f f . . 
-    f . f f . f f . f . f . f . . . 
-    f . f . f . . f . f f . . f f . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . e e e e . . . . . .
+        . . . . e e e e e e e e . . . .
+        . . . e e e b b b b e e e . . .
+        . . e e b b b b b b b b e e . .
+        . . e e 1 1 1 b b 1 b 1 e e . .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . e e b 1 1 1 b b 1 1 1 b e e .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . e e b 1 b b b b 1 b 1 b e e .
+        . . e e 1 b b b b 1 b 1 e e . .
+        . . e e b b b b b b b b e e . .
+        . . . e e e b b b b e e e . . .
+        . . . . e e e e e e e e . . . .
+        . . . . . . e e e e . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_flush = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f f f . f . . . . . . . . . 
-    . f . . . . f . . . . . . . . . 
-    . f f f . . f . . . f . . f . . 
-    . f . . . . f . . . f . . f . . 
-    . f . . . . f . . . f . . f . f 
-    . f . . . . . f f . . f f . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . f . . . . . . f 
-    . . . . . f f . f . . . . . . . 
-    . . . . f . . . f f f . . . . . 
-    . . . . . f . . f . . f . . . . 
-    . . . f f . . . f . . f . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 5 5 5 5 . . . . . .
+        . . . . 5 5 5 5 5 5 5 5 . . . .
+        . . . 5 5 5 d d d d 5 5 5 . . .
+        . . 5 5 d d d d d d d d 5 5 . .
+        . . 5 5 c c c d d c d d 5 5 . .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . 5 5 d c c c d d c d d d 5 5 .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . 5 5 d c d d d d c d d d 5 5 .
+        . . 5 5 c d d d d c c c 5 5 . .
+        . . 5 5 d d d d d d d d 5 5 . .
+        . . . 5 5 5 d d d d 5 5 5 . . .
+        . . . . 5 5 5 5 5 5 5 5 . . . .
+        . . . . . . 5 5 5 5 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_straight = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . f f . . . . . . . . . . . . . 
-    f . . . . f . . . . . . . . . . 
-    . f . . f f f . f f . f f . . . 
-    . . f . . f . f . . f . f . . . 
-    f f . . . f . f . . . f f f . f 
-    . . . . . . . . . . . . . . . . 
-    . . . . f f . f . . . . . . . . 
-    . f . f . f . f . . . . f . . f 
-    . . . . f f . f f . . f f f . . 
-    . f . . . f . f . f . . f . . . 
-    . f . . f f . f . f . . f . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 6 6 6 6 . . . . . .
+        . . . . 6 6 6 6 6 6 6 6 . . . .
+        . . . 6 6 6 7 7 7 7 6 6 6 . . .
+        . . 6 6 7 7 7 7 7 7 7 7 6 6 . .
+        . . 6 6 7 c c 7 7 c c c 6 6 . .
+        . 6 6 7 c 7 7 c 7 7 c 7 7 6 6 .
+        . 6 6 7 7 c 7 7 7 7 c 7 7 6 6 .
+        . 6 6 7 7 7 c 7 7 7 c 7 7 6 6 .
+        . 6 6 7 c 7 7 c 7 7 c 7 7 6 6 .
+        . . 6 6 7 c c 7 7 7 c 7 6 6 . .
+        . . 6 6 7 7 7 7 7 7 7 7 6 6 . .
+        . . . 6 6 6 7 7 7 7 6 6 6 . . .
+        . . . . 6 6 6 6 6 6 6 6 . . . .
+        . . . . . . 6 6 6 6 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     img_hand_straightFlush = img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . f f . . . . f f f f . . . 
-    . . f . . f . . . f . . . . . f 
-    . . . f . . . . . f f f . . . . 
-    . . . . f . . . . f . . . . . . 
-    . . f . . f . . . f . . . . . f 
-    . . . f f . . f . f . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . 2 2 2 d d d d 2 2 2 . . .
+        . . 2 2 d d d d d d d d 2 2 . .
+        . . 2 2 d 2 2 d d 2 2 2 2 2 . .
+        . 2 2 d 2 d d 2 d 2 d d d 2 2 .
+        . 2 2 d d 2 d d d 2 2 2 d 2 2 .
+        . 2 2 d d d 2 d d 2 d d d 2 2 .
+        . 2 2 d 2 d d 2 d 2 d d d 2 2 .
+        . . 2 2 d 2 2 d d 2 d d 2 2 . .
+        . . 2 2 d d d d d d d d 2 2 . .
+        . . . 2 2 2 d d d d 2 2 2 . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     let hn_1pair = sprites.create(img_hand_1pair, SpriteKind.handName)
     hn_1pair.setPosition(108, 24)
@@ -1688,15 +1824,16 @@ function initHandImage() {
     hn_2pair.setPosition(108, 40)
     let hn_3card = sprites.create(img_hand_3card, SpriteKind.handName)
     hn_3card.setPosition(108, 56)
-    let hn_4card = sprites.create(img_hand_4card, SpriteKind.handName)
-    hn_4card.setPosition(108, 72)
-
-    let hn_fullHouse = sprites.create(img_hand_fullHouse, SpriteKind.handName)
-    hn_fullHouse.setPosition(139, 24)
-    let hn_flush = sprites.create(img_hand_flush, SpriteKind.handName)
-    hn_flush.setPosition(139, 40)
     let hn_straight = sprites.create(img_hand_straight, SpriteKind.handName)
-    hn_straight.setPosition(139, 56)
+    hn_straight.setPosition(108, 72)
+    
+
+    let hn_flush = sprites.create(img_hand_flush, SpriteKind.handName)
+    hn_flush.setPosition(139, 24)
+    let hn_fullHouse = sprites.create(img_hand_fullHouse, SpriteKind.handName)
+    hn_fullHouse.setPosition(139, 40)
+    let hn_4card = sprites.create(img_hand_4card, SpriteKind.handName)
+    hn_4card.setPosition(139, 56)
     let hn_straightFlush = sprites.create(img_hand_straightFlush, SpriteKind.handName)
     hn_straightFlush.setPosition(139, 72)
     
@@ -1886,23 +2023,11 @@ function initCardMap() {
     my[11][4]= 4
 }
 function initWayName() {
-    wayName[0] = "R1:"
-    wayName[1] = "R2:"
-    wayName[2] = "R3:"
-    wayName[3] = "R4:"
-    wayName[4] = "R5:"
-    wayName[5] = "C1:"
-    wayName[6] = "C2:"
-    wayName[7] = "C3:"
-    wayName[8] = "C4:"
-    wayName[9] = "C5:"
-    wayName[10] = "/:"
-    wayName[11] = "\\:"
+    wayName = ["R1:", "R2:", "R3:", "R4:", "R5:", "C1:", "C2:", "C3:", "C4:", "C5:", "/:", "\\:"]
 }
 function initVariables () {
     putPosX = []
     putPosY = []
-    putCardList = sprites.allOfKind(SpriteKind.card)    
     putCardNoList = []
 
     putCardMap = [[],[]]
@@ -1980,6 +2105,7 @@ let img_n6: Image = null
 let img_n7: Image = null
 let img_n8: Image = null
 let img_n9: Image = null
+
 let img_hand_1pair: Image = null
 let img_hand_2pair: Image = null
 let img_hand_3card: Image = null
@@ -1988,13 +2114,60 @@ let img_hand_fullHouse: Image = null
 let img_hand_flush: Image = null
 let img_hand_straight: Image = null
 let img_hand_straightFlush: Image = null
-let imageList: Image[] = []
-let imgNumList: Image[] = []
+let imageList: Image[] = null
+let imgNumList: Image[] = null
+
+let img_handmark_1pair: Image = null
+let img_handmark_2pair: Image = null
+let img_handmark_3card: Image = null
+let img_handmark_4card: Image = null
+let img_handmark_fullHouse: Image = null
+let img_handmark_flush: Image = null
+let img_handmark_straight: Image = null
+let img_handmark_straightFlush: Image = null
+
+let img_empty: Image = (img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `)
+
+let img_throwCard: Image = (img`
+        . . . . . . . . . . . . . . . 
+        . . 8 8 8 8 8 8 8 8 8 8 8 . . 
+        . 8 8 1 1 1 1 1 1 1 1 1 8 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 1 8 8 8 8 8 8 8 8 8 1 8 . 
+        . 8 8 1 1 1 1 1 1 1 1 1 8 8 . 
+        . . 8 8 8 8 8 8 8 8 8 8 8 . . 
+        . . . . . . . . . . . . . . . 
+        `)
 
 let currentCardNo = 0
 let currentCard: Sprite = null
-let putCardList: Sprite[] = null
-let putCardNoList: number[] = []
+let putCardNoList: number[] = null
 let putCardMap: number[][] = null
 let mx: number[][] = null
 let my: number[][] = null
@@ -2019,12 +2192,26 @@ let straight_num_tp: Sprite = null
 let sf_num_fp: Sprite = null
 let sf_num_tp: Sprite = null
 
+let mark_r1: Sprite = null
+let mark_r2: Sprite = null
+let mark_r3: Sprite = null
+let mark_r4: Sprite = null
+let mark_r5: Sprite = null
+let mark_c1: Sprite = null
+let mark_c2: Sprite = null
+let mark_c3: Sprite = null
+let mark_c4: Sprite = null
+let mark_c5: Sprite = null
+let mark_sl_rup: Sprite = null //slant right up
+let mark_sl_lup: Sprite = null //slant left up
+let wayMarks: Sprite[] = [];
+
 let girl: Sprite = null
 let girlsDialogue: string[] = [];
 
 let cursor: Sprite = null
-let rows: number[] = []
-let columns: number[] = []
+let rows: number[] = null
+let columns: number[] = null
 let parentCard: Sprite = null
 
 let counter_1pair: number = 0
@@ -2035,7 +2222,7 @@ let counter_fullHouse: number = 0
 let counter_flush: number = 0
 let counter_straight: number = 0
 let counter_sf: number = 0
-let wayName: string[] = []
+let wayName: string[] = null
 let currentHandsList: string[] = null
 
 let volume: number = 148
@@ -2337,6 +2524,8 @@ initCardMap()
 initCardImage()
 initNumImage()
 initHandImage()
+initHandMarkImage()
+initMarkSprite();
 initWayName()
 initCursor()
 initGirl()
