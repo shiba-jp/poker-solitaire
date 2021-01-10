@@ -51,7 +51,7 @@ jobs:
 #          cp ./built/binary.uf2 binary-p0.uf2
       - name: bundle all
         run: |
-          cat binary-*.uf2 > built/arcade.uf2
+          cat binary-*.uf2 > built/poker-solitaire.uf2
       - name: upload bundled
         uses: actions/upload-release-asset@v1.0.1
         env:
