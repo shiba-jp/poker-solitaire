@@ -1645,8 +1645,8 @@ function drawHandMark(way: number, img: Image) {
     if(way == 7) { bgImage.drawTransparentImage(img, 48, 2) }
     if(way == 8) { bgImage.drawTransparentImage(img, 64, 2) }
     if(way == 9) { bgImage.drawTransparentImage(img, 80, 2) }
-    if(way == 10) { bgImage.drawTransparentImage(img, 92, 92) }
-    if(way == 11) { bgImage.drawTransparentImage(img, 4, 92) }
+    if(way == 10) { bgImage.drawTransparentImage(img, 4, 92) }
+    if(way == 11) { bgImage.drawTransparentImage(img, 92, 92) }
 }
 function initHandImage() {
     img_hand_1pair = img`
