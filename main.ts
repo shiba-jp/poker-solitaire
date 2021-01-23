@@ -78,6 +78,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     
     if (posY - 1 >= 0) {
         posY += -1
+    }else if (posY - 1 == -1) {
+        posY = 4
     }
     moveSprite(cursor, posX, posY)
 })
@@ -88,6 +90,8 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     
     if (posY + 1 <= 4) {
         posY += 1
+    }else if (posY + 1 == 5) {
+        posY = 0
     }
     moveSprite(cursor, posX, posY)
 })
@@ -97,6 +101,8 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     }
     if (posX - 1 >= 0) {
         posX += -1
+    }else if (posX - 1 == -1) {
+        posX = 4
     }
     moveSprite(cursor, posX, posY)
 })
@@ -106,6 +112,8 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     }
     if (posX + 1 <= 4) {
         posX += 1
+    }else if (posX + 1 == 5) {
+        posX = 0
     }
     moveSprite(cursor, posX, posY)
 })
@@ -365,7 +373,7 @@ function getCardNo() : number {
 function moveSprite (sprite: Sprite, posX: number, posY: number) {
     if (sprite.kind() == SpriteKind.card) {
         if (isUsedPalce(posX, posY)) {
-            game.showLongText("There's already a card in that spot.", DialogLayout.Bottom)
+            //game.showLongText("There's already a card in that spot.", DialogLayout.Bottom)
             return false
         } else {
             sprite.x = columns[posX]
