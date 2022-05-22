@@ -343,7 +343,7 @@ function finishGame() {
         "\n4card:50Px" + counter_4card +
         "\nS.F:75Px" + counter_sf
         , DialogLayout.Center)
-    
+    pause(3000)
     game.over((info.score() > info.highScore()))
 }
 game.onUpdateInterval(5000, function() {
